@@ -1,0 +1,9 @@
+{
+    "name": "z-randex",
+    "version": "0.0.1",
+    "title": "Randex",
+    "author": "pwhk",
+    "dependencies": [],
+    "description": "Randomize recipes, research costs and properties of machines, vehicles, turrets, enemies etc.",
+    "factorio_version": "2.0"
+}
