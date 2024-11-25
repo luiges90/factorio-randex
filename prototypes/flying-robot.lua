@@ -24,12 +24,12 @@ function rand_flying_robot(item)
     if item.energy_per_tick then
         item.energy_per_tick = rand_energy(item.energy_per_tick, rng, min, max)
     end
-    if item.min_to_charge then
-        item.min_to_charge = item.min_to_charge * rng:random_real(min, max)
-    end
-    if item.max_to_charge then
-        item.max_to_charge = item.max_to_charge * rng:random_real(min, max)
-    end
+    --if item.min_to_charge then
+    --    item.min_to_charge = item.min_to_charge * rng:random_real(min, max)
+    --end
+    --if item.max_to_charge then
+    --    item.max_to_charge = item.max_to_charge * rng:random_real(min, max)
+    --end
     if item.speed_multiplier_when_out_of_energy then
         item.speed_multiplier_when_out_of_energy = item.speed_multiplier_when_out_of_energy * rng:random_real(min, max)
     end
