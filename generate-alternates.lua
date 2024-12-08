@@ -69,11 +69,12 @@ for _, prototype_type in ipairs(prototype_types) do
                             new_recipe.name = recipe.name .. "--" .. new_item.name .. "-" .. k .. "a"
                             new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
                             new_recipe.localised_description = {"recipe-description." .. recipe.name}
-                            for _, result in pairs(new_recipe.results) do
-                                if result.name == old_name then
-                                    result.name = new_item.name
-                                end
-                            end
+                            new_recipe.results = {{type = "item", name = new_item.name, amount = 1}}
+                            --for _, result in pairs(new_recipe.results) do
+                            --    if result.name == old_name then
+                            --        result.name = new_item.name
+                            --    end
+                            --end
                             table.insert(result, new_recipe)
                             log("Created alternate recipe " .. new_recipe.name)
 
@@ -84,16 +85,16 @@ for _, prototype_type in ipairs(prototype_types) do
                                 local technology = data.raw["technology"][technology]
                                 l = l + 1
                                 
-                                log("Creating alternate technology for " .. technology.name .. " providing " .. new_recipe.name)
+                                log("Creating technology for " .. technology.name .. " providing " .. new_recipe.name)
                                 local new_technology = table.deepcopy(technology)
                                 new_technology.name = technology.name .. "--" .. new_recipe.name .. "-" .. l .. "a"
-                                new_technology.localised_name = {"", {"?", {"technology-name." .. technology.name}, {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
-                                new_technology.localised_description = {"technology-description." .. technology.name}
-                                for _, effect in pairs(new_technology.effects) do
-                                    if effect.recipe == recipe.name then
-                                        effect.recipe = new_recipe.name
-                                    end
-                                end
+                                new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
+                                new_technology.effects = {
+                                    {
+                                        type = "unlock-recipe",
+                                        recipe = new_recipe.name
+                                    }
+                                }
                                 table.insert(result, new_technology)
                                 log("Created alternate technology " .. new_technology.name)
                             end
