@@ -58,8 +58,8 @@ end
 
 function find_items_placing_entity(entity)
     local found = {}
-    for name, recipe in pairs(data.raw.item) do
-        if recipe.place_result == entity then
+    for name, item in pairs(data.raw.item) do
+        if item.place_result == entity or item.place_as_equipment_result == entity then
             table.insert(found, name)
         end
     end

@@ -1,3 +1,5 @@
+require("generate-alternates")
+
 local prototypes = {
     "accumulator",
     "active-trigger",
@@ -8,7 +10,7 @@ local prototypes = {
     "asteroid-collector",
     "asteroid",
     "beacon",
-    "boiler",
+    --"boiler",
     "burner-generator",
     "capsule",
     "cargo",
@@ -72,18 +74,4 @@ local prototypes = {
 
 for _, file in ipairs(prototypes) do
     require("prototypes." .. file)
-end
-
--- Currently player has little recourse if spitters outrange the gun turret.
-if data.raw["ammo-turret"]["gun-turret"].attack_parameters.range < data.raw["unit"]["small-spitter"].attack_parameters.range + 1 then
-    data.raw["ammo-turret"]["gun-turret"].attack_parameters.range = data.raw["unit"]["small-spitter"].attack_parameters.range + 1
-end
-if data.raw["ammo-turret"]["gun-turret"].attack_parameters.range < data.raw["unit"]["medium-spitter"].attack_parameters.range + 1 then
-    data.raw["ammo-turret"]["gun-turret"].attack_parameters.range = data.raw["unit"]["medium-spitter"].attack_parameters.range + 1
-end
--- large / behemoth are exempt since we expect player has better tech by then
-
--- electric mining drill enforce a minimum mining size to be same as vanilla because otherwise mining out a patch is very cumbersome. Vulcanus is too far away.
-if data.raw["mining-drill"]["electric-mining-drill"].resource_searching_radius < 2.49 then
-    data.raw["mining-drill"]["electric-mining-drill"].resource_searching_radius = 2.49
 end

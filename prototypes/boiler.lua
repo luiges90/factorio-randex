@@ -18,4 +18,7 @@ for _, item in pairs(data.raw.boiler) do
     if item.target_temperature then
         item.target_temperature = item.target_temperature * rng:random_real(min, max)
     end
+    if item.min_working_temperature and item.max_working_temperature and item.min_working_temperature > item.max_working_temperature then
+        item.min_working_temperature = item.max_working_temperature
+    end
 end
