@@ -49,5 +49,21 @@ data:extend(
     minimum_value = 0.1,
     order = "e",
    },
+   {
+      type = "int-setting",
+      name = "pw-rand-min-alternate-entities",
+      setting_type = "startup",
+      default_value = 2,
+      minimum_value = 0,
+      order = "f",
+   },
+   {
+      type = "int-setting",
+      name = "pw-rand-max-alternate-entities",
+      setting_type = "startup",
+      default_value = 3,
+      minimum_value = 0,
+      order = "f",
+   },
 }
 )

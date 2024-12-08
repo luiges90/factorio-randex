@@ -56,6 +56,46 @@ function ceil_2sf(x)
     end
 end
 
+function find_items_placing_entity(entity)
+    local found = {}
+    for name, recipe in pairs(data.raw.item) do
+        if recipe.place_result == entity then
+            table.insert(found, name)
+        end
+    end
+    return found
+end
+
+function find_recipes_creating(item)
+    local found = {}
+    for name, recipe in pairs(data.raw.recipe) do
+        if recipe.results then
+            for _, result in pairs(recipe.results) do
+                if result.name == item then
+                    table.insert(found, name)
+                    break
+                end
+            end
+        end
+    end
+    return found
+end
+
+function find_technologies_providing_recipe(item)
+    local found = {}
+    for name, recipe in pairs(data.raw.technology) do
+        if recipe.effects then
+            for _, effect in pairs(recipe.effects) do
+                if effect.type == "unlock-recipe" and effect.recipe == item then
+                    table.insert(found, name)
+                    break
+                end
+            end
+        end
+    end
+    return found
+end
+
 -- These items are not stackable and will crash if we attempt to change their stack size.
 stack_blacklist = {}
 

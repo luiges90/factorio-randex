@@ -47,7 +47,6 @@ local prototypes = {
     "quality",
     "radar",
     "reactor",
-    "recipe",
     "repair-tool",
     "resource-entity",
     "roboport",
@@ -59,14 +58,16 @@ local prototypes = {
     "sticker",
     "storage-tank",
     "surface",
-    "technology",
     "thruster",
     "tile",
     "transport-belt",
     "turret",
     "unit",
     "unit-spawner",
-    "vehicle"
+    "vehicle",
+
+    "recipe",
+    "technology",
 }
 
 for _, file in ipairs(prototypes) do
