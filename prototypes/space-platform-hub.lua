@@ -13,6 +13,6 @@ for _, item in pairs(data.raw["space-platform-hub"]) do
         item.platform_repair_speed_modifier = item.platform_repair_speed_modifier * rng:random_real(min, max)
     end
     if item.weight then
-        item.weight = item.weight * rng:random_real(min, max)
+        --item.weight = item.weight * rng:random_real(min, max)
     end
 end

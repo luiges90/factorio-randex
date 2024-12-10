@@ -38,66 +38,79 @@ for _, prototype_type in ipairs(prototype_types) do
                 alt.name = alt.name .. "-" .. i .. "a"
                 alt.localised_name = {"", {"entity-name." ..  old_entity.name}, " Alternate ", tostring(i)}
                 alt.localised_description = {"entity-description." ..  old_entity.name}
+                
+                local items = find_items_placing_entity(old_entity.name)
+                local item = nil
+                if #items > 0 then
+                    item = data.raw["item"][items[1]]
+                else
+                    log("No items found for entity " .. old_entity.name)
+                    break
+                end
+
+                log("Creating alternate item for " .. item.name .. " placing " .. alt.name)
+                local new_item = table.deepcopy(item)
+                new_item.name = item.name .. "--" .. alt.name .. "-" .. i .. "a"
+                new_item.localised_name = {"", {"?", {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
+                new_item.localised_description = {"item-description." .. item.name}
+                new_item.place_result = alt.name
+                if old_entity.minable then
+                    alt.minable = {mining_time = old_entity.minable.mining_time, result = new_item.name}
+                end
+                if not new_item.weight then
+                    new_item.weight = 10000
+                end
                 table.insert(result, alt)
                 log("Created alternate entity " .. alt.name)
+                table.insert(result, new_item)
+                log("Created alternate item " .. new_item.name)
 
-                local item = find_items_placing_entity(old_entity.name)
-                local j = 0
-                for _, item in pairs(item) do
-                    local item = data.raw["item"][item]
-                    j = j + 1
+                local k = 0
+                for _, recipe in pairs(old_recipe_names) do
+                    local recipe = data.raw["recipe"][recipe]
+                    k = k + 1
+                    
+                    if recipe.category == "recycling" then
+                        log("Skipping recycling recipe " .. recipe.name)
+                    else
+                        log("Creating alternate recipe for " .. recipe.name .. " resulting in " .. new_item.name)
+                        local new_recipe = table.deepcopy(recipe)
+                        new_recipe.name = recipe.name .. "--" .. new_item.name .. "-" .. k .. "a"
+                        new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
+                        new_recipe.localised_description = {"recipe-description." .. recipe.name}
 
-                    log("Creating alternate item for " .. item.name .. " placing " .. alt.name)
-                    local new_item = table.deepcopy(item)
-                    new_item.name = item.name .. "--" .. alt.name .. "-" .. j .. "a"
-                    new_item.localised_name = {"", {"?", {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
-                    new_item.localised_description = {"item-description." .. item.name}
-                    new_item.place_result = alt.name
-                    table.insert(result, new_item)
-                    log("Created alternate item " .. new_item.name)
-
-                    local k = 0
-                    for _, recipe in pairs(old_recipe_names) do
-                        local recipe = data.raw["recipe"][recipe]
-                        k = k + 1
-                        
-                        if recipe.category == "recycling" then
-                            log("Skipping recycling recipe " .. recipe.name)
-                        else
-                            log("Creating alternate recipe for " .. recipe.name .. " resulting in " .. new_item.name)
-                            local new_recipe = table.deepcopy(recipe)
-                            new_recipe.name = recipe.name .. "--" .. new_item.name .. "-" .. k .. "a"
-                            new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
-                            new_recipe.localised_description = {"recipe-description." .. recipe.name}
-                            new_recipe.results = {{type = "item", name = new_item.name, amount = 1}}
-                            --for _, result in pairs(new_recipe.results) do
-                            --    if result.name == old_name then
-                            --        result.name = new_item.name
-                            --    end
-                            --end
-                            table.insert(result, new_recipe)
-                            log("Created alternate recipe " .. new_recipe.name)
-
-                            local old_technology_names = find_technologies_providing_recipe(recipe.name)
-
-                            local l = 0
-                            for _, technology in pairs(old_technology_names) do
-                                local technology = data.raw["technology"][technology]
-                                l = l + 1
-                                
-                                log("Creating technology for " .. technology.name .. " providing " .. new_recipe.name)
-                                local new_technology = table.deepcopy(technology)
-                                new_technology.name = technology.name .. "--" .. new_recipe.name .. "-" .. l .. "a"
-                                new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
-                                new_technology.effects = {
-                                    {
-                                        type = "unlock-recipe",
-                                        recipe = new_recipe.name
-                                    }
-                                }
-                                table.insert(result, new_technology)
-                                log("Created alternate technology " .. new_technology.name)
+                        local new_results = {}
+                        for _, result in pairs(new_recipe.results) do
+                            if result.name == old_name then
+                                table.insert(new_results, {name = new_item.name, type = result.type, amount = result.amount})
+                            else
+                                table.insert(new_results, result)
                             end
+                        end
+                        new_recipe.results = new_results
+
+                        table.insert(result, new_recipe)
+                        log("Created alternate recipe " .. new_recipe.name)
+
+                        local old_technology_names = find_technologies_providing_recipe(recipe.name)
+
+                        local l = 0
+                        for _, technology in pairs(old_technology_names) do
+                            local technology = data.raw["technology"][technology]
+                            l = l + 1
+                            
+                            log("Creating technology for " .. technology.name .. " providing " .. new_recipe.name)
+                            local new_technology = table.deepcopy(technology)
+                            new_technology.name = technology.name .. "--" .. new_recipe.name .. "-" .. l .. "a"
+                            new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
+                            new_technology.effects = {
+                                {
+                                    type = "unlock-recipe",
+                                    recipe = new_recipe.name
+                                }
+                            }
+                            table.insert(result, new_technology)
+                            log("Created alternate technology " .. new_technology.name)
                         end
                     end
                 end

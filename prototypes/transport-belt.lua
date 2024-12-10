@@ -10,8 +10,6 @@ local max = settings.startup["pw-rand-scale-max"].value
 local updated = {}
 for _, item in pairs(data.raw["transport-belt"]) do
     -- find underground belt and splitter of same speed and change them in sync
-    ugbelt = nil
-    splitter = nil
     for _, compared in pairs(data.raw["underground-belt"]) do
         if item.speed == compared.speed then
             ugbelt = compared

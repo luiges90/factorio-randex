@@ -19,7 +19,7 @@ for _, tile in pairs(data.raw.tile) do
         tile.max_health = tile.max_health * rng:random_real(min, max)
     end
     if tile.weight then
-        tile.weight = tile.weight * rng:random_real(min, max)
+        --tile.weight = tile.weight * rng:random_real(min, max)
     end
     if tile.absorption_per_second then
         for _, absorption in pairs(tile.absorption_per_second) do
