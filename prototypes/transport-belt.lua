@@ -14,24 +14,28 @@ for _, item in pairs(data.raw["transport-belt"]) do
         if item.speed == compared.speed then
             ugbelt = compared
             table.insert(updated, compared.name)
+            break
         end
     end
     for _, compared in pairs(data.raw["splitter"]) do
         if item.speed == compared.speed then
             splitter = compared
             table.insert(updated, compared.name)
+            break
         end
     end
     for _, compared in pairs(data.raw["loader"]) do
         if item.speed == compared.speed then
             loader = compared
             table.insert(updated, compared.name)
+            break
         end
     end
     for _, compared in pairs(data.raw["loader-1x1"]) do
         if item.speed == compared.speed then
             loader1 = compared
             table.insert(updated, compared.name)
+            break
         end
     end
 
