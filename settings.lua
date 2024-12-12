@@ -55,7 +55,7 @@ data:extend(
       setting_type = "startup",
       default_value = 1,
       minimum_value = 0,
-      order = "f",
+      order = "f1",
    },
    {
       type = "int-setting",
@@ -63,7 +63,7 @@ data:extend(
       setting_type = "startup",
       default_value = 3,
       minimum_value = 0,
-      order = "f",
+      order = "f2",
    },
 }
 )

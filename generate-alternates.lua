@@ -49,7 +49,7 @@ for _, prototype_type in ipairs(prototype_types) do
 
                 log("Creating alternate item for " .. item.name .. " placing " .. alt.name)
                 local new_item = table.deepcopy(item)
-                new_item.name = item.name .. "--" .. alt.name .. "-" .. i .. "a"
+                new_item.name = item.name .. "-" .. i .. "a"
                 new_item.localised_name = {"", {"?", {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
                 new_item.localised_description = {"item-description." .. item.name}
                 new_item.place_result = alt.name
@@ -74,7 +74,11 @@ for _, prototype_type in ipairs(prototype_types) do
                     else
                         log("Creating alternate recipe for " .. recipe.name .. " resulting in " .. new_item.name)
                         local new_recipe = table.deepcopy(recipe)
-                        new_recipe.name = recipe.name .. "--" .. new_item.name .. "-" .. k .. "a"
+                        if k == 1 then
+                            new_recipe.name = recipe.name .. "-" .. i .. "a"
+                        else 
+                            new_recipe.name = recipe.name .. "-" .. i .. '-' .. k .. "a"
+                        end
                         new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
                         new_recipe.localised_description = {"recipe-description." .. recipe.name}
 
@@ -100,7 +104,7 @@ for _, prototype_type in ipairs(prototype_types) do
                             
                             log("Creating technology for " .. technology.name .. " providing " .. new_recipe.name)
                             local new_technology = table.deepcopy(technology)
-                            new_technology.name = technology.name .. "--" .. new_recipe.name .. "-" .. l .. "a"
+                            new_technology.name = technology.name .. "-" .. i .. '-' .. k .. "-" .. l .. "a"
                             new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. item.name}, {"entity-name." .. old_entity.name}}, " Alternate ", tostring(i)}
                             new_technology.effects = {
                                 {
