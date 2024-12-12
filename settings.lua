@@ -53,7 +53,7 @@ data:extend(
       type = "int-setting",
       name = "pw-rand-min-alternate-entities",
       setting_type = "startup",
-      default_value = 2,
+      default_value = 1,
       minimum_value = 0,
       order = "f",
    },

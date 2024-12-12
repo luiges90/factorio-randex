@@ -25,11 +25,10 @@ local prototype_types = {
 local result = {}
 for _, prototype_type in ipairs(prototype_types) do
     local old_entities = data.raw[prototype_type]
-    local alt_cnt = rng:random(alt_min, alt_max)
-    log("Creating " .. alt_cnt .. " alternate entities for " .. prototype_type)
-
     if old_entities then
         for _, old_entity in pairs(old_entities) do
+            local alt_cnt = rng:random(alt_min, alt_max)
+            log("Creating " .. alt_cnt .. " alternate entities for " .. prototype_type)
             for i = 1, alt_cnt do
                 log("Creating alternate entity " .. i .. " of " .. alt_cnt .. " for " .. old_entity.name)
                 local old_recipe_names = find_recipes_creating(old_entity.name)
@@ -109,6 +108,7 @@ for _, prototype_type in ipairs(prototype_types) do
                                     recipe = new_recipe.name
                                 }
                             }
+                            new_technology.prerequisites = {technology.name}
                             table.insert(result, new_technology)
                             log("Created alternate technology " .. new_technology.name)
                         end
