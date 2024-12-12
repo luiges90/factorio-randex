@@ -80,11 +80,11 @@ for _, prototype_type in ipairs(prototype_types) do
                         new_recipe.localised_description = {"recipe-description." .. recipe.name}
 
                         local new_results = {}
-                        for _, result in pairs(new_recipe.results) do
+                        for _, recipe_result in pairs(recipe.results) do
                             if result.name == old_name then
-                                table.insert(new_results, {name = new_item.name, type = result.type, amount = result.amount})
+                                table.insert(new_results, {name = new_item.name, type = recipe_result.type, amount = recipe_result.amount})
                             else
-                                table.insert(new_results, result)
+                                table.insert(new_results, recipe_result)
                             end
                         end
                         new_recipe.results = new_results
