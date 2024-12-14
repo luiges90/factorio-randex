@@ -71,12 +71,12 @@ function find_recipes_creating(item)
     return found
 end
 
-function find_technologies_providing_recipe(item)
+function find_technologies_providing_recipe(recipe)
     local found = {}
-    for name, recipe in pairs(data.raw.technology) do
-        if recipe.effects then
-            for _, effect in pairs(recipe.effects) do
-                if effect.type == "unlock-recipe" and effect.recipe == item then
+    for name, tech in pairs(data.raw.technology) do
+        if tech.effects then
+            for _, effect in pairs(tech.effects) do
+                if effect.type == "unlock-recipe" and effect.recipe == recipe then
                     table.insert(found, name)
                     break
                 end

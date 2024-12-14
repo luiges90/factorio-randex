@@ -49,16 +49,17 @@ for _, item_type in pairs(item_types) do
                 new_item.weight = 10000
             end
 
+            local old_entity_name = old_item.place_result
+            local old_equipment_name = old_item.place_as_equipment_result
             if old_item.place_result then
-                local old_entity_name = old_item.place_result
                 local old_entity = find_entity_by_name(old_entity_name)
                 if old_entity then
                     local new_entity = table.deepcopy(old_entity)
                     new_entity.name = old_entity.name .. "-" .. i .. "a"
-                    new_entity.localised_name = {"", {"entity-name." ..  old_entity.name}, " Alt. ", tostring(i)}
+                    new_entity.localised_name = {"", {"?", {"entity-name." ..  old_entity.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
                     new_entity.localised_description = {"entity-description." ..  old_entity.name}
 
-                    new_item.localised_name = {"", {"?", {"item-name." .. old_item.name}, {"entity-name." .. old_entity.name}}, " Alt. ", tostring(i)}
+                    new_item.localised_name = {"", {"?", {"entity-name." .. old_entity.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
                     new_item.place_result = new_entity.name
                     if old_entity.minable then
                         new_entity.minable = {mining_time = old_entity.minable.mining_time, result = new_item.name}
@@ -74,15 +75,14 @@ for _, item_type in pairs(item_types) do
                     break
                 end
             elseif old_item.place_as_equipment_result then
-                local old_equipment_name = old_item.place_as_equipment_result
                 local old_equipment = find_entity_by_name(old_equipment_name)
                 if old_equipment then
                     local new_equipment = table.deepcopy(old_equipment)
                     new_equipment.name = old_equipment.name .. "-" .. i .. "a"
-                    new_equipment.localised_name = {"", {"equipment-name." ..  old_equipment.name}, " Alt. ", tostring(i)}
+                    new_equipment.localised_name = {"", {"?", {"equipment-name." ..  old_equipment.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
                     new_equipment.localised_description = {"entity-description." ..  old_equipment.name}
 
-                    new_item.localised_name = {"", {"?", {"equipment-name." .. old_item.name}, {"entity-name." .. old_equipment.name}}, " Alt. ", tostring(i)}
+                    new_item.localised_name = {"", {"?", {"equipment-name." ..  old_equipment.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
                     new_item.place_as_equipment_result = new_equipment.name
 
                     table.insert(result, new_item)
@@ -105,24 +105,32 @@ for _, item_type in pairs(item_types) do
             local old_recipe_names = find_recipes_creating(old_item.name)
 
             local k = 0
-            for _, recipe in pairs(old_recipe_names) do
-                local recipe = data.raw["recipe"][recipe]
+            for _, old_recipe_name in pairs(old_recipe_names) do
+                local old_recipe = data.raw["recipe"][old_recipe_name]
                 k = k + 1
                 
-                if recipe.category == "recycling" then
-                    log("Skipping recycling recipe " .. recipe.name)
+                if old_recipe.category == "recycling" then
+                    log("Skipping recycling recipe " .. old_recipe.name)
                 else
-                    log("Creating alternate recipe for " .. recipe.name .. " resulting in " .. new_item.name)
-                    local new_recipe = table.deepcopy(recipe)
+                    local new_recipe = table.deepcopy(old_recipe)
                     if k == 1 then
-                        new_recipe.name = recipe.name .. "-" .. i .. "a"
+                        new_recipe.name = old_recipe.name .. "-" .. i .. "a"
                     else 
-                        new_recipe.name = recipe.name .. "-" .. i .. '-' .. k .. "a"
+                        new_recipe.name = old_recipe.name .. "-" .. i .. '-' .. k .. "a"
                     end
-                    new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
+
+                    local l10n = {"?", {"recipe-name." .. old_recipe.name}}
+                    if old_entity_name then
+                        table.insert(l10n, {"entity-name." .. old_entity_name})
+                    end
+                    if old_equipment_name then
+                        table.insert(l10n, {"equipment-name." .. old_equipment_name})
+                    end
+                    table.insert(l10n, {"item-name." .. old_item.name})
+                    new_recipe.localised_name = {"", l10n, " Alt. ", tostring(i)}
 
                     local new_results = {}
-                    for _, recipe_result in pairs(recipe.results) do
+                    for _, recipe_result in pairs(old_recipe.results) do
                         if result.name == old_name then
                             table.insert(new_results, {name = new_item.name, type = recipe_result.type, amount = recipe_result.amount})
                         else
@@ -134,24 +142,33 @@ for _, item_type in pairs(item_types) do
                     table.insert(result, new_recipe)
                     log("Created alternate recipe " .. new_recipe.name)
 
-                    local old_technology_names = find_technologies_providing_recipe(recipe.name)
+                    local old_technology_names = find_technologies_providing_recipe(old_recipe.name)
 
                     local l = 0
-                    for _, technology in pairs(old_technology_names) do
-                        local technology = data.raw["technology"][technology]
+                    for _, old_technology_name in pairs(old_technology_names) do
+                        local old_technology = data.raw["technology"][old_technology_name]
                         l = l + 1
                         
-                        log("Creating technology for " .. technology.name .. " providing " .. new_recipe.name)
-                        local new_technology = table.deepcopy(technology)
-                        new_technology.name = technology.name .. "-" .. i .. '-' .. k .. "-" .. l .. "a"
-                        new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
+                        local new_technology = table.deepcopy(old_technology)
+                        new_technology.name = new_recipe.name .. "-" .. l .. "a"
+
+                        local l10n = {"?", {"recipe-name." .. old_recipe.name}}
+                        if old_entity_name then
+                            table.insert(l10n, {"entity-name." .. old_entity_name})
+                        end
+                        if old_equipment_name then
+                            table.insert(l10n, {"equipment-name." .. old_equipment_name})
+                        end
+                        table.insert(l10n, {"item-name." .. old_item.name})
+                        new_technology.localised_name = {"", l10n, " Alt. ", tostring(i)}
+
                         new_technology.effects = {
                             {
                                 type = "unlock-recipe",
                                 recipe = new_recipe.name
                             }
                         }
-                        new_technology.prerequisites = {technology.name}
+                        new_technology.prerequisites = {old_technology.name}
                         table.insert(result, new_technology)
                         log("Created alternate technology " .. new_technology.name)
                     end
