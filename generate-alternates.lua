@@ -13,8 +13,8 @@ local item_types = {"item", "item-with-entity-data", "gun", "ammo", "armor", "ca
 local prototype_types = {
     "accumulator", "agricultural-tower", "artillery-turret", "asteroid-collector", "beacon", "boiler", "burner-generator", "cargo", 
     "container", "linked-container", "logistic-container", "crafting-machine", "assembling-machine", "rocket-silo", "furnace", "electric-pole", 
-    --"active-defense-equipment", "battery-equipment", "belt-immunity-equipment", "energy-shield-equipment", "generator-equipment", "inventory-bonus-equipment",
-    --"movement-bonus-equipment", "night-vision-equipment", "roboport-equipment", "solar-panel-equipment",
+    "active-defense-equipment", "battery-equipment", "belt-immunity-equipment", "energy-shield-equipment", "generator-equipment", "inventory-bonus-equipment",
+    "movement-bonus-equipment", "night-vision-equipment", "roboport-equipment", "solar-panel-equipment",
     "flying-robot", "capture-robot", "combat-robot", "construction-robot", "logistic-robot", 
     "fusion-generator", "fusion-reactor", "gate", "generator", "heat-pipe", "inserter", "lab",
     "lamp", "land-mine", "lightning-attractor", "mining-drill", "offshore-pump", "pipe", "pipe-to-ground", "pump", "radar", "reactor",
@@ -49,8 +49,8 @@ for _, item_type in pairs(item_types) do
                 new_item.weight = 10000
             end
 
-            local old_entity_name = old_item.place_result
-            if old_entity_name then
+            if old_item.place_result then
+                local old_entity_name = old_item.place_result
                 local old_entity = find_entity_by_name(old_entity_name)
                 if old_entity then
                     local new_entity = table.deepcopy(old_entity)
@@ -71,6 +71,27 @@ for _, item_type in pairs(item_types) do
                     log("Created alternate item " .. new_entity.name)
                 else
                     log("Could not find entity " .. old_entity_name)
+                    break
+                end
+            elseif old_item.place_as_equipment_result then
+                local old_equipment_name = old_item.place_as_equipment_result
+                local old_equipment = find_entity_by_name(old_equipment_name)
+                if old_equipment then
+                    local new_equipment = table.deepcopy(old_equipment)
+                    new_equipment.name = old_equipment.name .. "-" .. i .. "a"
+                    new_equipment.localised_name = {"", {"equipment-name." ..  old_equipment.name}, " Alt. ", tostring(i)}
+                    new_equipment.localised_description = {"entity-description." ..  old_equipment.name}
+
+                    new_item.localised_name = {"", {"?", {"equipment-name." .. old_item.name}, {"entity-name." .. old_equipment.name}}, " Alt. ", tostring(i)}
+                    new_item.place_as_equipment_result = new_equipment.name
+
+                    table.insert(result, new_item)
+                    log("Created alternate equipment " .. new_item.name)
+
+                    table.insert(result, new_equipment)
+                    log("Created alternate item " .. new_equipment.name)
+                else
+                    log("Could not find equipment " .. old_equipment_name)
                     break
                 end
             elseif item_type == "item" then
@@ -98,11 +119,7 @@ for _, item_type in pairs(item_types) do
                     else 
                         new_recipe.name = recipe.name .. "-" .. i .. '-' .. k .. "a"
                     end
-                    if old_entity then
-                        new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}, {"entity-name." .. old_entity.name}}, " Alt. ", tostring(i)}
-                    else 
-                        new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
-                    end
+                    new_recipe.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
 
                     local new_results = {}
                     for _, recipe_result in pairs(recipe.results) do
@@ -127,11 +144,7 @@ for _, item_type in pairs(item_types) do
                         log("Creating technology for " .. technology.name .. " providing " .. new_recipe.name)
                         local new_technology = table.deepcopy(technology)
                         new_technology.name = technology.name .. "-" .. i .. '-' .. k .. "-" .. l .. "a"
-                        if old_entity then
-                            new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}, {"entity-name." .. old_entity.name}}, " Alt. ", tostring(i)}
-                        else
-                            new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
-                        end
+                        new_technology.localised_name = {"", {"?", {"recipe-name." .. recipe.name}, {"item-name." .. old_item.name}}, " Alt. ", tostring(i)}
                         new_technology.effects = {
                             {
                                 type = "unlock-recipe",
