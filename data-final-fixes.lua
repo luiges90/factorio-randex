@@ -1,5 +1,3 @@
-require("generate-alternates")
-
 local prototypes = {
     "accumulator",
     "active-trigger",

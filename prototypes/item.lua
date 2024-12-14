@@ -9,7 +9,7 @@ local min = settings.startup["pw-rand-scale-min"].value
 local max = settings.startup["pw-rand-scale-max"].value
 
 local item_categories = {
-    'ammo', 'capsule', 'gun', 'item', 'module', 'armor', 'repair-tool'
+    'ammo', 'capsule', 'gun', 'item', 'item-with-entity-data', 'module', 'armor', 'repair-tool'
 }
 for _, category in pairs(item_categories) do
     for _, item in pairs(data.raw[category]) do

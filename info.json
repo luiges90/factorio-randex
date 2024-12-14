@@ -3,7 +3,7 @@
     "version": "0.0.3",
     "title": "Randex",
     "author": "pwhk",
-    "dependencies": [],
+    "dependencies": ["? elevated-rails", "? quality", "? space-age"],
     "description": "Randomize and generate recipes, research costs and properties of machines, vehicles, turrets, enemies etc.",
     "factorio_version": "2.0"
 }

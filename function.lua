@@ -56,16 +56,6 @@ function ceil_2sf(x)
     end
 end
 
-function find_items_placing_entity(entity)
-    local found = {}
-    for name, item in pairs(data.raw.item) do
-        if item.place_result == entity or item.place_as_equipment_result == entity then
-            table.insert(found, name)
-        end
-    end
-    return found
-end
-
 function find_recipes_creating(item)
     local found = {}
     for name, recipe in pairs(data.raw.recipe) do
