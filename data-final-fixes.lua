@@ -8,7 +8,7 @@ local prototypes = {
     "asteroid-collector",
     "asteroid",
     "beacon",
-    --"boiler",
+    "boiler",
     "burner-generator",
     "capsule",
     "cargo",

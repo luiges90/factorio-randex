@@ -27,5 +27,10 @@ for _, item in pairs(data.raw.unit) do
     if item.spawning_time_modifier then
         item.spawning_time_modifier = item.spawning_time_modifier * rng:random_real(min, max)
     end
+
+    -- Force small spitter range to be smaller to avoid basic turrets being unable to hit spitters.
+    if item.name == "small-spitter" then
+        item.attack_parameters.range = item.attack_parameters.range * rng:random_real(min, 1)
+    end
 end
 
