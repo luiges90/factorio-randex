@@ -45,9 +45,6 @@ for _, item_type in pairs(item_types) do
             new_item.name = old_item.name .. "-" .. i .. "a"
             new_item.localised_name = {"", {"item-name." .. old_item.name}, " Alt. ", tostring(i)}
             new_item.localised_description = {"item-description." .. old_item.name}
-            if not new_item.weight then
-                new_item.weight = 10000
-            end
 
             local old_entity_name = old_item.place_result
             local old_equipment_name = old_item.place_as_equipment_result

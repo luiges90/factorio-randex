@@ -41,9 +41,9 @@ for _, category in pairs(item_categories) do
         if item.fuel_top_speed_multiplier_quality_bonus then
             item.fuel_top_speed_multiplier_quality_bonus = item.fuel_top_speed_multiplier_quality_bonus * rng:random_real(min, max)
         end
-        --if not item.weight then
-        --    item.weight = 10000
-        --end
-        --item.weight = math.ceil(item.weight * rng:random_real(min, max) / 1000) * 1000
+        if not item.weight then
+            item.weight = 10000
+        end
+        item.weight = math.ceil(item.weight * rng:random_real(min, max) / 10000) * 10000
     end
 end
