@@ -27,7 +27,7 @@ function rand_attack_parameters(item, rng, min, max)
         item.cooldown_deviation = clamp(item.cooldown_deviation * rng:random_real(min, max), 0, 1)
     end
     if item.ammo_type then
-        rand_ammo_type(item.ammo_type, rng, min, max, item.range)
+        rand_ammo_type(item.ammo_type, rng, min, max, item.range, item.cooldown)
     end
     if item.type == "stream" then
         rand_stream_attack_parameters(item, rng, min, max)
@@ -37,8 +37,5 @@ end
 function rand_stream_attack_parameters(item, rng, min, max)
     if item.fluid_consumption then
         item.fluid_consumption = item.fluid_consumption * rng:random_real(min, max)
-    end
-    if item.gun_barrel_length then
-        item.gun_barrel_length = item.gun_barrel_length * rng:random_real(min, max)
     end
 end

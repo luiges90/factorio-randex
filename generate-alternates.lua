@@ -39,7 +39,7 @@ end
 for _, item_type in pairs(item_types) do
     for _, old_item in pairs(data.raw[item_type]) do
         local alt_cnt = rng:random(alt_min, alt_max)
-        log("Creating " .. alt_cnt .. " alternate items for " .. old_item.name)
+        --log("Creating " .. alt_cnt .. " alternate items for " .. old_item.name)
         for i = 1, alt_cnt do
             local new_item = table.deepcopy(old_item)
             new_item.name = old_item.name .. "-" .. i .. "a"
@@ -63,12 +63,12 @@ for _, item_type in pairs(item_types) do
                     end
 
                     table.insert(result, new_item)
-                    log("Created alternate entity " .. new_item.name)
+                    --log("Created alternate entity " .. new_item.name)
 
                     table.insert(result, new_entity)
-                    log("Created alternate item " .. new_entity.name)
+                    --log("Created alternate item " .. new_entity.name)
                 else
-                    log("Could not find entity " .. old_entity_name)
+                    --log("Could not find entity " .. old_entity_name)
                     break
                 end
             elseif old_item.place_as_equipment_result then
@@ -83,20 +83,20 @@ for _, item_type in pairs(item_types) do
                     new_item.place_as_equipment_result = new_equipment.name
 
                     table.insert(result, new_item)
-                    log("Created alternate equipment " .. new_item.name)
+                    --log("Created alternate equipment " .. new_item.name)
 
                     table.insert(result, new_equipment)
-                    log("Created alternate item " .. new_equipment.name)
+                    --log("Created alternate item " .. new_equipment.name)
                 else
-                    log("Could not find equipment " .. old_equipment_name)
+                    --log("Could not find equipment " .. old_equipment_name)
                     break
                 end
             elseif item_type == "item" then
-                log("Skipping item " .. old_item.name .. " without place_result")
+                --log("Skipping item " .. old_item.name .. " without place_result")
                 break
             else
                 table.insert(result, new_item)
-                log("Created alternate item " .. new_item.name)
+                --log("Created alternate item " .. new_item.name)
             end
 
             local old_recipe_names = find_recipes_creating(old_item.name)
@@ -107,7 +107,7 @@ for _, item_type in pairs(item_types) do
                 k = k + 1
                 
                 if old_recipe.category == "recycling" then
-                    log("Skipping recycling recipe " .. old_recipe.name)
+                    --log("Skipping recycling recipe " .. old_recipe.name)
                 else
                     local new_recipe = table.deepcopy(old_recipe)
                     if k == 1 then
@@ -137,7 +137,7 @@ for _, item_type in pairs(item_types) do
                     new_recipe.results = new_results
 
                     table.insert(result, new_recipe)
-                    log("Created alternate recipe " .. new_recipe.name)
+                    --log("Created alternate recipe " .. new_recipe.name)
 
                     local old_technology_names = find_technologies_providing_recipe(old_recipe.name)
 
@@ -167,7 +167,7 @@ for _, item_type in pairs(item_types) do
                         }
                         new_technology.prerequisites = {old_technology.name}
                         table.insert(result, new_technology)
-                        log("Created alternate technology " .. new_technology.name)
+                        --log("Created alternate technology " .. new_technology.name)
                     end
                 end
             end

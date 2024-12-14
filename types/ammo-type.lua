@@ -3,13 +3,13 @@ require("function")
 require("types.energy")
 require("types.trigger")
 
-function rand_ammo_type(item, rng, min, max, range) 
+function rand_ammo_type(item, rng, min, max, range, cooldown) 
     if item.action then
         for k, t in pairs(item.action) do
             if type(k) == "number" then
-                rand_trigger(t, rng, min, max, range)
+                rand_trigger(t, rng, min, max, range, cooldown)
             else
-                rand_trigger(item.action, rng, min, max, range)
+                rand_trigger(item.action, rng, min, max, range, cooldown)
                 break
             end
         end

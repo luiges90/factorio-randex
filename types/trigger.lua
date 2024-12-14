@@ -53,7 +53,7 @@ function rand_trigger_effect(item, rng, min, max)
     end
 end
 
-function rand_trigger_delivery(item, rng, min, max, range)
+function rand_trigger_delivery(item, rng, min, max, range, cooldown)
     if item.type == "projectile" then
         item.starting_speed = item.starting_speed * rng:random_real(min, max)
         if item.starting_speed_deviation then
@@ -73,11 +73,15 @@ function rand_trigger_delivery(item, rng, min, max, range)
         end
     elseif item.type == "beam" then
         if range and item.max_length then
-            item.max_length = range * 2
+            item.max_length = range
         else 
             item.max_length = item.max_length * rng:random_real(min, max)
         end
-        item.duration = item.duration * rng:random_real(min, max)
+        if cooldown and item.duration then
+            item.duration = cooldown
+        else
+            item.duration = item.duration * rng:random_real(min, max)
+        end
     elseif item.type == "artillery" then
         item.starting_speed = item.starting_speed * rng:random_real(min, max)
         if item.starting_speed_deviation then
@@ -113,7 +117,7 @@ function rand_trigger_delivery(item, rng, min, max, range)
     end
 end
 
-function rand_trigger(item, rng, min, max, range)
+function rand_trigger(item, rng, min, max, range, cooldown)
     if item.type == "area" then
         item.radius = item.radius * rng:random_real(min, max)
     elseif item.type == "line" then
@@ -139,9 +143,9 @@ function rand_trigger(item, rng, min, max, range)
     if item.action_delivery then
         for k, t in pairs(item.action_delivery) do
             if type(k) == "number" then
-                rand_trigger_delivery(t, rng, min, max, range)
+                rand_trigger_delivery(t, rng, min, max, range, cooldown)
             else
-                rand_trigger_delivery(item.action_delivery, rng, min, max, range)
+                rand_trigger_delivery(item.action_delivery, rng, min, max, range, cooldown)
                 break
             end
         end

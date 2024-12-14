@@ -31,6 +31,9 @@ for _, item in pairs(data.raw["electric-turret"]) do
     if item.energy_source then
         rand_energy_source(item.energy_source, rng, min, max)
     end
+    if compare_energy(item.energy_source.buffer_capacity, item.attack_parameters.ammo_type.energy_consumption) < 0 then
+        item.energy_source.buffer_capacity = multiply_energy(item.attack_parameters.ammo_type.energy_consumption, 1.01)
+    end
 end
 
 for _, item in pairs(data.raw["fluid-turret"]) do
