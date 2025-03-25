@@ -8,6 +8,7 @@ local min = settings.startup["pw-rand-scale-min"].value
 local max = settings.startup["pw-rand-scale-max"].value
 
 for _, item in pairs(data.raw.unit) do
+    local old_range = item.attack_parameters.range
     rand_attack_parameters(item.attack_parameters, rng, min, max)
     item.movement_speed = item.movement_speed * rng:random_real(min, max)
     item.distraction_cooldown = math.ceil(item.distraction_cooldown * rng:random_real(min, max))
@@ -29,8 +30,8 @@ for _, item in pairs(data.raw.unit) do
     end
 
     -- Force small spitter range to be smaller to avoid basic turrets being unable to hit spitters.
-    if item.name == "small-spitter" then
-        item.attack_parameters.range = item.attack_parameters.range * rng:random_real(min, 1)
+    if (item.name == "small-spitter" or item.name == "medium-spitter") and item.attack_parameters.range > old_range then
+        item.attack_parameters.range = item.attack_parameters.range / max
     end
 end
 

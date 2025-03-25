@@ -12,7 +12,7 @@ local prototypes = {
     "burner-generator",
     "capsule",
     "cargo",
-    "character",
+    --"character",
     "combinator",
     "container",
     "crafting-machine",

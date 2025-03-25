@@ -1,6 +1,6 @@
 {
     "name": "z-randex",
-    "version": "0.0.3",
+    "version": "0.0.5",
     "title": "Randex",
     "author": "pwhk",
     "dependencies": ["? elevated-rails", "? quality", "? space-age"],
